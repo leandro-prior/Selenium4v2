@@ -7,4 +7,6 @@ How to install:
 Run test:
 
 * execute 'mvn clean install' or
-* In each class, right button -> Run 
+* In each class, right button -> Run
+
+Happy Testing!
