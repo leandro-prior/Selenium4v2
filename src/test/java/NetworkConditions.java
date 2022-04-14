@@ -1,0 +1,47 @@
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.devtools.v99.network.Network;
+import org.openqa.selenium.devtools.v99.network.model.ConnectionType;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.Optional;
+
+public class NetworkConditions {
+    ChromeDriver driver;
+    DevTools devTools;
+
+    @BeforeMethod
+    public void setUp(){
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        //ChromeOptions options = new ChromeOptions();
+        //driver = new RemoteWebDriver(new URL("http://localhost:4444/"), options);
+        driver.manage().window().maximize();
+        devTools = driver.getDevTools();
+    }
+
+    @Test
+    public void enableSlow(){
+        devTools.createSession();
+        devTools.send(Network.enable(
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty()));
+        devTools.send(Network.emulateNetworkConditions(
+                false,
+                150,
+                2500,
+                2000,
+                Optional.of(ConnectionType.CELLULAR3G)));
+        driver.get("https://linkedin.com");
+        System.out.println("Enable Slow Network: " + driver.getTitle());
+    }
+
+    @Test
+    public void doNotEnable(){
+        driver.get("https://RexJones2.com");
+        System.out.println("Do Not Enable Network: " + driver.getTitle());
+    }
+}
